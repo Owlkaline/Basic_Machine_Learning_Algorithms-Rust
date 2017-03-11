@@ -4,9 +4,22 @@ mod modules;
 
 use modules::Population;
 use std::time::Instant;
+use std::io;
 
-fn main() {    
-    let mut population = Population::new(String::from("Hello, world!"), 20);
+fn main() {
+    println!("Simple genetic algoithm");
+    println!("Obtains the goal string from a randomly generated string.");
+    println!("Example Goal stirng: Hello, world!");
+    
+    println!("\nInput Goal string: ");
+    
+    let mut input = String::new();
+
+    io::stdin().read_line(&mut input)
+        .ok()
+        .expect("Couldn't read line");
+    
+    let mut population = Population::new(String::from(input.trim()), 20);
     
     let mut finished: bool = false;
     

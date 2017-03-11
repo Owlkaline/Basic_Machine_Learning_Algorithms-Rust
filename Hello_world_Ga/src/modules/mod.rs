@@ -61,7 +61,11 @@ impl Population {
     }
     
     self.sort();
-    self.display();
+    
+    if self.generation_number % 100 == 0 {
+      self.display();
+    }
+    
     self.last_gen_children = self.members[0].mate(&self.members[1]);
     self.splice(2);
     
