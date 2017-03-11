@@ -43,15 +43,13 @@ impl Population {
       let mut final_code: Vec<char> = Vec::new();
       {
         let mems = &mut *self.members;
-        let mut dat_code: Vec<char> = Vec::new();
         for j in 0..mems[0].code.len() {
           if i % 2 == 0 {
-            dat_code.push(self.last_gen_children[0].code.chars().nth(j).unwrap());
+            final_code.push(self.last_gen_children[0].code.chars().nth(j).unwrap());
           } else {
-            dat_code.push(self.last_gen_children[1].code.chars().nth(j).unwrap());
+            final_code.push(self.last_gen_children[1].code.chars().nth(j).unwrap());
           }
         }     
-        final_code =dat_code;
       }
       self.members[i].change_code(final_code); 
     }
@@ -62,12 +60,9 @@ impl Population {
       self.members[i].calc_cost(&self.goal);
     }
     
-    // sort?
     self.sort();
-    // display
     self.display();
     self.last_gen_children = self.members[0].mate(&self.members[1]);
-    // Splice children?
     self.splice(2);
     
     
@@ -80,6 +75,7 @@ impl Population {
         self.average();
         //display
         self.display();
+        println!("Goal String reached in {} generations", self.generation_number);
         return true
       }
     }
@@ -92,7 +88,7 @@ impl Population {
   
   pub fn display(&self) {
     
-    println!("Gen: {} Avg Cost: {} Best: {}", self.generation_number, self.average(), self.members[0].code);
+    println!("Generation: {}\n    Avg Cost: {} \n    Best String: {}\n    Goal String: {}\n", self.generation_number, self.average(), self.members[0].code, self.goal);
   }
 }
 
@@ -109,17 +105,13 @@ impl Chromosome {
     }
   }
   
-  pub fn calc_cost(&mut self, compareTo: &str) {
+  pub fn calc_cost(&mut self, compare_to: &str) {
     let mut total: i32 = 0;
     for i in 0..self.code.len() {
-      total += (self.code.chars().nth(i).unwrap() as i32 - compareTo.chars().nth(i).unwrap() as i32) * 
-               (self.code.chars().nth(i).unwrap() as i32 - compareTo.chars().nth(i).unwrap() as i32);
+      total += (self.code.chars().nth(i).unwrap() as i32 - compare_to.chars().nth(i).unwrap() as i32) * 
+               (self.code.chars().nth(i).unwrap() as i32 - compare_to.chars().nth(i).unwrap() as i32);
     }
     self.cost = total;
-  }
-  
-  pub fn copy(&mut self, new_code: String) {
-    self.code = new_code;
   }
   
   pub fn change_code(&mut self, new_code: Vec<char>) {
